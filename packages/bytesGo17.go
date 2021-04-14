@@ -6,7 +6,7 @@ import (
 	"bytes"
 	"reflect"
 
-	"github.com/mattn/anko/env"
+	"github.com/brutella/anko/env"
 )
 
 func bytesGo17() {

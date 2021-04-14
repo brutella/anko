@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mattn/anko/packages"
-	"github.com/mattn/anko/vm"
+	"github.com/brutella/anko/packages"
+	"github.com/brutella/anko/vm"
 )
 
 var testCoreEnvSetupFunc = func(t *testing.T, env corelib.Env) { Import(env.(*vm.Env)) }

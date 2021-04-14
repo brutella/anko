@@ -11,11 +11,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mattn/anko/core"
-	"github.com/mattn/anko/env"
-	_ "github.com/mattn/anko/packages"
-	"github.com/mattn/anko/parser"
-	"github.com/mattn/anko/vm"
+	"github.com/brutella/anko/core"
+	"github.com/brutella/anko/env"
+	_ "github.com/brutella/anko/packages"
+	"github.com/brutella/anko/parser"
+	"github.com/brutella/anko/vm"
 )
 
 const version = "0.1.8"

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/mattn/anko/env"
-	"github.com/mattn/anko/vm"
+	"github.com/brutella/anko/env"
+	"github.com/brutella/anko/vm"
 )
 
 func Example_vmArrays() {

@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/mattn/anko/env"
-	"github.com/mattn/anko/parser"
+	"github.com/brutella/anko/env"
+	"github.com/brutella/anko/parser"
 )
 
 func TestSlices(t *testing.T) {

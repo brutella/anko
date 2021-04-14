@@ -5,7 +5,7 @@ package vm
 import (
 	"testing"
 
-	_ "github.com/mattn/anko/packages"
+	_ "github.com/brutella/anko/packages"
 )
 
 func TestPackagesStringsGo110(t *testing.T) {

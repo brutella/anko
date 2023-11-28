@@ -656,15 +656,26 @@ func (runInfo *runInfoStruct) runSingleStmt() {
 				runInfo.rv = nilValue
 				return
 			}
-			ident, ok := che.RHS.(*ast.IdentExpr)
-			if !ok {
+
+			var ch reflect.Value
+			switch expr := che.RHS.(type) {
+			case *ast.IdentExpr:
+				v, err := e.GetValue(expr.Lit)
+				if err != nil {
+					runInfo.err = newError(expr, err)
+					runInfo.rv = nilValue
+					return
+				}
+				ch = v
+			case *ast.AnonCallExpr:
+				runInfo.expr = expr
+				runInfo.invokeExpr()
+				if runInfo.err != nil {
+					return
+				}
+				ch = runInfo.rv
+			default:
 				runInfo.err = newStringError(pos, "invalid operation")
-				runInfo.rv = nilValue
-				return
-			}
-			v, err := e.GetValue(ident.Lit)
-			if err != nil {
-				runInfo.err = newError(ident, err)
 				runInfo.rv = nilValue
 				return
 			}
@@ -672,7 +683,7 @@ func (runInfo *runInfoStruct) runSingleStmt() {
 			bodies = append(bodies, caseStmt.Stmt)
 			cases = append(cases, reflect.SelectCase{
 				Dir:  reflect.SelectRecv,
-				Chan: v,
+				Chan: ch,
 				Send: zeroValue,
 			})
 		}

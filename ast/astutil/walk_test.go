@@ -3,6 +3,7 @@ package astutil
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"testing"
 
 	"github.com/mattn/anko/ast"
@@ -235,5 +236,42 @@ func TestBadCode(t *testing.T) {
 		if err == nil {
 			t.Fatalf("code %q should fail", code)
 		}
+	}
+}
+
+func TestSwitchCaseExpr(t *testing.T) {
+	src := `switch "test" {
+case "tset":
+    break
+default:
+    break
+}`
+	stmts, err := parser.ParseSrc(src)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var caseExprFound bool
+	err = Walk(stmts, func(e interface{}) error {
+		switch e := e.(type) {
+		case *ast.LiteralExpr:
+			switch e.Literal.Kind() {
+			case reflect.String:
+				v := e.Literal.Interface()
+				if v.(string) == "tset" {
+					caseExprFound = true
+				}
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if is, want := caseExprFound, true; is != want {
+		t.Fatalf("%v != %v", is, want)
 	}
 }

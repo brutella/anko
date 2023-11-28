@@ -1382,3 +1382,22 @@ func TestLetsStatementPosition(t *testing.T) {
 		t.Fatalf("%v != %v", is, want)
 	}
 }
+
+func TestSelectCaseCallExpr(t *testing.T) {
+	src := `ch = make(chan bool, 1)
+ch <- true
+select {
+case str = <- ch:
+    return str
+default:
+    return false
+}`
+	e := env.NewEnv()
+	res, err := Execute(e, nil, src)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if is, want := res.(bool), true; is != want {
+		t.Fatalf("%v != %v", is, want)
+	}
+}

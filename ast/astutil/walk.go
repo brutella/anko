@@ -143,8 +143,36 @@ func walkStmt(stmt ast.Stmt, f WalkFunc) error {
 		if err := walkStmt(stmt.Default, f); err != nil {
 			return err
 		}
+	case *ast.ChanStmt:
+		if err := walkExpr(stmt.LHS, f); err != nil {
+			return err
+		}
+		if err := walkExpr(stmt.OkExpr, f); err != nil {
+			return err
+		}
+		return walkExpr(stmt.RHS, f)
 	case *ast.GoroutineStmt:
 		return walkExpr(stmt.Expr, f)
+	case *ast.SelectStmt:
+		if err := walkStmt(stmt.Body, f); err != nil {
+			return err
+		}
+	case *ast.SelectBodyStmt:
+		for _, stmt := range stmt.Cases {
+			if err := walkStmt(stmt, f); err != nil {
+				return err
+			}
+		}
+		if err := walkStmt(stmt.Default, f); err != nil {
+			return err
+		}
+	case *ast.SelectCaseStmt:
+		if err := walkStmt(stmt.Expr, f); err != nil {
+			return err
+		}
+		if err := walkStmt(stmt.Stmt, f); err != nil {
+			return err
+		}
 	default:
 		return fmt.Errorf("unknown statement %v", reflect.TypeOf(stmt))
 	}

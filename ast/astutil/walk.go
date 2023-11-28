@@ -132,6 +132,10 @@ func walkStmt(stmt ast.Stmt, f WalkFunc) error {
 		}
 		for _, switchCaseStmt := range stmt.Cases {
 			caseStmt := switchCaseStmt.(*ast.SwitchCaseStmt)
+			if err := walkExprs(caseStmt.Exprs, f); err != nil {
+				return err
+			}
+
 			if err := walkStmt(caseStmt.Stmt, f); err != nil {
 				return err
 			}

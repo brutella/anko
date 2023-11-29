@@ -41,6 +41,7 @@ import (
 %type<expr> expr_binary
 %type<expr> expr_lets
 
+%type<op_assign> op_assign
 %type<expr> op_binary
 %type<expr> op_comparison
 %type<expr> op_add
@@ -83,13 +84,14 @@ import (
 	expr_binary            ast.Expr
 	expr_lets              ast.Expr
 
+	op_assign              string
 	op_binary              ast.Operator
 	op_comparison          ast.Operator
 	op_add                 ast.Operator
 	op_multiply            ast.Operator
 }
 
-%token<tok> IDENT NUMBER STRING ARRAY VARARG FUNC RETURN VAR THROW IF ELSE FOR IN EQEQ NEQ GE LE OROR ANDAND NEW TRUE FALSE NIL NILCOALESCE MODULE TRY CATCH FINALLY PLUSEQ MINUSEQ MULEQ DIVEQ ANDEQ OREQ BREAK CONTINUE PLUSPLUS MINUSMINUS SHIFTLEFT SHIFTRIGHT SWITCH SELECT CASE DEFAULT GO CHAN STRUCT MAKE OPCHAN EQOPCHAN TYPE LEN DELETE CLOSE MAP IMPORT
+%token<tok> IDENT NUMBER STRING ARRAY VARARG FUNC RETURN VAR THROW IF ELSE FOR IN EQEQ NEQ GE LE OROR ANDAND NEW TRUE FALSE NIL NILCOALESCE MODULE TRY CATCH FINALLY PLUSEQ MINUSEQ MULEQ DIVEQ ANDEQ OREQ BREAK CONTINUE PLUSPLUS MINUSMINUS SHIFTLEFT SHIFTRIGHT SWITCH SELECT CASE DEFAULT GO CHAN STRUCT MAKE OPCHAN EQOPCHAN TYPE LEN DELETE CLOSE MAP IMPORT COLASSIGN ASSIGN
 
 /* lowest precedence */
 %left ,
@@ -268,19 +270,19 @@ stmt_var_or_lets :
 	}
 
 stmt_var :
-	VAR expr_idents '=' exprs
+	VAR expr_idents ASSIGN exprs
 	{
 		$$ = &ast.VarStmt{Names: $2, Exprs: $4}
 		$$.SetPosition($1.Position())
 	}
 
 stmt_lets :
-	expr '=' expr
+	expr op_assign expr
 	{
 		$$ = &ast.LetsStmt{LHSS: []ast.Expr{$1}, RHSS: []ast.Expr{$3}}
 		$$.SetPosition($1.Position())
 	}
-	| exprs '=' exprs
+	| exprs op_assign exprs
 	{
 		if len($1) == 2 && len($3) == 1 {
 			if _, ok := $3[0].(*ast.ItemExpr); ok {
@@ -308,6 +310,16 @@ stmt_lets :
 			$$ = &ast.ChanStmt{RHS: $3}
 			$$.SetPosition($2.Position())
 		}
+	}
+
+op_assign : 
+	COLASSIGN 
+	{ 
+		$$ = $1.Lit
+	}
+	| ASSIGN
+	{ 
+		$$ = $1.Lit
 	}
 
 stmt_if :

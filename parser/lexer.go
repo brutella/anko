@@ -148,6 +148,17 @@ retry:
 				tok = int(ch)
 				lit = string(ch)
 			}
+		case ':':
+			s.next()
+			switch s.peek() {
+			case '=':
+				tok = COLASSIGN
+				lit = ":="
+			default:
+				s.back()
+				tok = int(ch)
+				lit = string(ch)
+			}
 		case '=':
 			s.next()
 			switch s.peek() {
@@ -162,12 +173,12 @@ retry:
 					lit = "= <-"
 				} else {
 					s.back()
-					tok = int(ch)
+					tok = ASSIGN
 					lit = string(ch)
 				}
 			default:
 				s.back()
-				tok = int(ch)
+				tok = ASSIGN
 				lit = string(ch)
 			}
 		case '?':
@@ -324,7 +335,7 @@ retry:
 				tok = int(ch)
 				lit = string(ch)
 			}
-		case '\n', '(', ')', ':', ';', '%', '{', '}', '[', ']', ',', '^':
+		case '\n', '(', ')', ';', '%', '{', '}', '[', ']', ',', '^':
 			tok = int(ch)
 			lit = string(ch)
 		default:

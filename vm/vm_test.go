@@ -222,7 +222,6 @@ func TestVar(t *testing.T) {
 		{Script: `var 1 = 2`, ParseError: fmt.Errorf("syntax error")},
 		{Script: `a = 1++`, RunError: fmt.Errorf("invalid operation")},
 		{Script: `var a = 1++`, RunError: fmt.Errorf("invalid operation")},
-		{Script: `a := 1`, ParseError: fmt.Errorf("syntax error")},
 		{Script: `var a := 1`, ParseError: fmt.Errorf("syntax error")},
 		{Script: `y = z`, RunError: fmt.Errorf("undefined symbol 'z'")},
 
@@ -231,6 +230,12 @@ func TestVar(t *testing.T) {
 		{Script: `a = 1`, RunOutput: int64(1), Output: map[string]interface{}{"a": int64(1)}},
 		{Script: `a = 1.1`, RunOutput: float64(1.1), Output: map[string]interface{}{"a": float64(1.1)}},
 		{Script: `a = "a"`, RunOutput: "a", Output: map[string]interface{}{"a": "a"}},
+
+		{Script: `a := nil`, RunOutput: nil, Output: map[string]interface{}{"a": nil}},
+		{Script: `a := true`, RunOutput: true, Output: map[string]interface{}{"a": true}},
+		{Script: `a := 1`, RunOutput: int64(1), Output: map[string]interface{}{"a": int64(1)}},
+		{Script: `a := 1.1`, RunOutput: float64(1.1), Output: map[string]interface{}{"a": float64(1.1)}},
+		{Script: `a := "a"`, RunOutput: "a", Output: map[string]interface{}{"a": "a"}},
 
 		{Script: `var a = nil`, RunOutput: nil, Output: map[string]interface{}{"a": nil}},
 		{Script: `var a = true`, RunOutput: true, Output: map[string]interface{}{"a": true}},

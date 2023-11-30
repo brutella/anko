@@ -104,6 +104,18 @@ func (e *Env) GetValue(symbol string) (reflect.Value, error) {
 	return e.parent.GetValue(symbol)
 }
 
+// Types returns all types.
+func (e *Env) Values() map[string]reflect.Value {
+	e.rwMutex.RLock()
+	copy := map[string]reflect.Value{}
+	for k, v := range e.values {
+		copy[k] = v
+	}
+	e.rwMutex.RUnlock()
+
+	return copy
+}
+
 // delete
 
 // Delete deletes symbol in current scope.

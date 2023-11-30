@@ -529,6 +529,7 @@ func (runInfo *runInfoStruct) invokeExpr() {
 		}
 		var err error
 		pack := runInfo.env.NewEnv()
+		pack.Id = name
 		for methodName, methodValue := range methods {
 			err = pack.DefineValue(methodName, methodValue)
 			if err != nil {

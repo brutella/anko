@@ -17,6 +17,7 @@ type (
 
 	// Env is the environment needed for a VM to run in.
 	Env struct {
+		Id             string
 		rwMutex        sync.RWMutex
 		parent         *Env
 		values         map[string]reflect.Value
@@ -161,6 +162,7 @@ func (e *Env) GetEnvFromPath(path []string) (*Env, error) {
 func (e *Env) Copy() *Env {
 	e.rwMutex.RLock()
 	copy := Env{
+		Id:             e.Id,
 		parent:         e.parent,
 		values:         make(map[string]reflect.Value, len(e.values)),
 		externalLookup: e.externalLookup,

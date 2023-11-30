@@ -114,6 +114,18 @@ func (e *Env) GetValueSymbols() []string {
 	return symbols
 }
 
+// Values returns all values in the current scope.
+func (e *Env) Values() map[string]reflect.Value {
+	e.rwMutex.RLock()
+	copy := map[string]reflect.Value{}
+	for k, v := range e.values {
+		copy[k] = v
+	}
+	e.rwMutex.RUnlock()
+
+	return copy
+}
+
 // delete
 
 // Delete deletes symbol in current scope.

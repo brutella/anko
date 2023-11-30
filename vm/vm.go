@@ -12,7 +12,8 @@ import (
 
 // Options provides options to run VM with
 type Options struct {
-	Debug bool // run in Debug mode
+	Debug    bool // run in Debug mode
+	Inspector func(RunInfo) error
 }
 
 type (
@@ -37,6 +38,24 @@ type (
 		err error
 	}
 )
+
+func (runInfo *runInfoStruct) Stmt() ast.Stmt {
+	return runInfo.stmt
+}
+
+func (runInfo *runInfoStruct) Expr() ast.Expr {
+	return runInfo.expr
+}
+
+func (runInfo *runInfoStruct) Env() *env.Env {
+	return runInfo.env
+}
+
+type RunInfo interface {
+	Stmt() ast.Stmt
+	Expr() ast.Expr
+	Env() *env.Env
+}
 
 var (
 	nilType            = reflect.TypeOf(nil)

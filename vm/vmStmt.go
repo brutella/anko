@@ -58,6 +58,14 @@ func (runInfo *runInfoStruct) runSingleStmt() {
 	default:
 	}
 
+	if runInfo.options.Inspector != nil {
+		if err := runInfo.options.Inspector(runInfo); err != nil {
+			runInfo.rv = nilValue
+			runInfo.err = err
+			return
+		}
+	}
+
 	switch stmt := runInfo.stmt.(type) {
 
 	// nil

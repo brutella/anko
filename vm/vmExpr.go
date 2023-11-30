@@ -9,6 +9,14 @@ import (
 
 // invokeExpr evaluates one expression.
 func (runInfo *runInfoStruct) invokeExpr() {
+	if runInfo.options.Inspector != nil {
+		if err := runInfo.options.Inspector(runInfo); err != nil {
+			runInfo.rv = nilValue
+			runInfo.err = err
+			return
+		}
+	}
+
 	switch expr := runInfo.expr.(type) {
 
 	// OpExpr
